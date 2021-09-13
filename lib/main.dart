@@ -36,11 +36,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: TakePictureScreen(
-      //   camera: firstCamera,
-      // ),
-      //
-      home: ImagePick(),
+      home: TakePictureScreen(
+        camera: firstCamera,
+      ),
+
+      // home: ImagePick(),
     );
   }
 }

@@ -2,7 +2,9 @@
     package="com.sample.flutter_action_test_app">
    <application
         android:label="flutter_action_test_app"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true"
+        >
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
