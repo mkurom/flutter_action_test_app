@@ -15,6 +15,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   camera: 
   image_picker:
+  permission_handler: 
+
+  flutter_flavor: ^3.0.3
 
 dev_dependencies:
   flutter_test:
@@ -24,3 +27,41 @@ flutter:
 
   uses-material-design: true
 
+
+
+
+
+# flavor
+
+flutter_flavor:
+  dimensions:
+    android: "flutter-flavor"
+    ios: "flutter-flavor"
+
+  flavors:
+    # develop用
+    dev:
+      app:
+        name: "Dev App"
+      android:
+        applicationId: "com.example.dev"
+      ios:
+        bundleId: "com.example.dev"
+
+    # production用
+    prod:
+      app:
+        name: "Prod App"
+      android:
+        applicationId: "com.example.prod"
+      ios:
+        bundleId: "com.example.prod"
+
+# flavor generate command
+# flutter pub run flutter_flavor:main
+# flavor run command
+# flutter run --flavor prod -t lib/main_prod.dart
+# flutter run --flavor dev -t lib/main_dev.dart
+
+# --flavor : ネイティブ側に伝える
+# prod or dev  +  -t: Flutter のエントリーポイントを指定
