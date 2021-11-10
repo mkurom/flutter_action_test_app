@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_action_test_app/flutter_barcode_scanner/scanner.dart';
 import 'package:flutter_action_test_app/permission_handler/permission_handler.dart';
 
 class MyApp extends StatelessWidget {
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
       //   camera: firstCamera,
       // ),
       // home: ImagePick(),
-      home: PermissionHandle(),
+      // home: PermissionHandle(),
+      home: Scannaer(),
     );
   }
 }
