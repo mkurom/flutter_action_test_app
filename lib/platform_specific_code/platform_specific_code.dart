@@ -10,7 +10,8 @@ class PlatformSpecificCode extends StatefulWidget {
 }
 
 class _PlatformSpecificCodeState extends State<PlatformSpecificCode> {
-  //Bundle IdentiferをMethodChannelの引数にセットする
+  // Bundle IdentiferをMethodChannelの引数にセットする
+  // ネイティブ側にも同様のチャンネル名を使用する
   static const platform =
       MethodChannel('com.sample.flutter_action_test_app/battery');
 
@@ -19,6 +20,7 @@ class _PlatformSpecificCodeState extends State<PlatformSpecificCode> {
   Future<void> _getBatteryLevel() async {
     String batteryLevel;
     try {
+      // ネイティブ側のメソッドを呼び出す
       final int result = await platform.invokeMethod('getBatteryLevel');
       batteryLevel = 'Battery level at $result % .';
     } on PlatformException catch (e) {
