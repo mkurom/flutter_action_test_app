@@ -39,20 +39,18 @@ class _PlatformSpecificCodeState extends State<PlatformSpecificCode> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Platform Specific Code')),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                child: Text('Get Battery Level'),
-                onPressed: _getBatteryLevel,
-              ),
-              Text(_batteryLevel),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Platform Specific Code')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              child: Text('Get Battery Level'),
+              onPressed: _getBatteryLevel,
+            ),
+            Text(_batteryLevel),
+          ],
         ),
       ),
     );
