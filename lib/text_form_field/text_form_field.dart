@@ -1,19 +1,54 @@
+import 'dart:core';
+
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TextFieldPage extends StatelessWidget {
-  const TextFieldPage({Key? key}) : super(key: key);
+// state
+class MessageController {
+  MessageController(this.message);
+  List<String> message;
+}
+
+final messageProvider = StateNotifierProvider((ref) {
+  return MessageProvider();
+});
+
+class MessageProvider extends StateNotifier<MessageController> {
+  MessageProvider()
+      : super(
+          MessageController(
+            [
+              'aaaaa',
+              'bbbbb',
+              'ccccc',
+              'ddddd',
+              'eeeee',
+              'fffff',
+              'ggggg',
+              'hhhhh',
+              'iiiii',
+            ],
+          ),
+        );
+}
+//
+
+class TextFieldPage extends ConsumerWidget {
+  const TextFieldPage();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final messages = ref.watch(messageProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appbar(context),
       body: SafeArea(
         child: Column(
           children: [
-            _messageList(context),
+            _messageList(context, messages as MessageController),
             _inputBar(context),
           ],
         ),
@@ -45,7 +80,7 @@ class TextFieldPage extends StatelessWidget {
     );
   }
 
-  Widget _messageList(BuildContext context) {
+  Widget _messageList(BuildContext context, MessageController messages) {
     return Expanded(
       child: Container(
         width: double.infinity,
@@ -55,7 +90,7 @@ class TextFieldPage extends StatelessWidget {
 
             return ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              itemCount: 10,
+              itemCount: messages.message.length,
               itemBuilder: (context, index) {
                 return Bubble(
                   alignment:
@@ -65,8 +100,7 @@ class TextFieldPage extends StatelessWidget {
                   child: Container(
                     width: 120,
                     child: Text(
-                      'aaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbccccccccc' +
-                          index.toString(),
+                      messages.message[index] + index.toString(),
                     ),
                   ),
                 );
