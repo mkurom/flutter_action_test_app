@@ -1,3 +1,4 @@
+import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -46,20 +47,33 @@ class TextFieldPage extends StatelessWidget {
 
   Widget _messageList(BuildContext context) {
     return Expanded(
-      child: Builder(
-        builder: (context) {
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Container(
-                child: Text(
-                  index.toString(),
-                ),
-              );
-            },
-          );
-        },
+      child: Container(
+        width: double.infinity,
+        child: Builder(
+          builder: (context) {
+            // notifierから取得する
+
+            return ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return Bubble(
+                  alignment:
+                      (index % 2 == 0) ? Alignment.topRight : Alignment.topLeft,
+                  nip:
+                      (index % 2 == 0) ? BubbleNip.rightTop : BubbleNip.leftTop,
+                  child: Container(
+                    width: 120,
+                    child: Text(
+                      'aaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbccccccccc' +
+                          index.toString(),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
