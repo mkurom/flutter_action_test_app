@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_action_test_app/flutter_barcode_scanner/scanner.dart';
 // import 'package:flutter_action_test_app/permission_handler/permission_handler.dart';
 // import 'package:flutter_action_test_app/platform_specific_code/platform_specific_code.dart';
-import 'package:flutter_action_test_app/web_socket_channel/web_socket_channel.dart';
+// import 'package:flutter_action_test_app/web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_action_test_app/text_form_field/text_form_field.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -26,7 +27,8 @@ class MyApp extends StatelessWidget {
       // home: PermissionHandle(),
       // home: Scannaer(),
       // home: PlatformSpecificCode(),
-      home: WebSocketPage(),
+      // home: WebSocketPage(),
+      home: TextFieldPage(),
     );
   }
 }
