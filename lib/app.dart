@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter_action_test_app/route_aware/route_aware_page.dart';
+import 'package:flutter_action_test_app/route_aware/sample_page.dart';
 // import 'package:flutter_action_test_app/flutter_barcode_scanner/scanner.dart';
 // import 'package:flutter_action_test_app/permission_handler/permission_handler.dart';
 // import 'package:flutter_action_test_app/platform_specific_code/platform_specific_code.dart';
 // import 'package:flutter_action_test_app/web_socket_channel/web_socket_channel.dart';
-import 'package:flutter_action_test_app/text_form_field/text_form_field.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:flutter_action_test_app/text_form_field/text_form_field.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -29,7 +31,8 @@ class MyApp extends StatelessWidget {
       // home: Scannaer(),
       // home: PlatformSpecificCode(),
       // home: WebSocketPage(),
-      home: ProviderScope(child: TextFieldPage()),
+      // home: ProviderScope(child: TextFieldPage()),
+      home: FirstPage(),
     );
   }
 }
