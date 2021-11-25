@@ -10,13 +10,8 @@ List<PagingProduct> populateData() {
     if (index == 21) index = 0;
 
     var p = new PagingProduct(
-        name: pagingProductRepository.names[i],
-        price: pagingProductRepository.prices[i],
-        image: 'images/${pagingProductRepository.names1[i % 22] + '.jpg'}',
-        offer: pagingProductRepository.offer[i],
-        ratings: pagingProductRepository.ratings[i],
-        reviewValue: pagingProductRepository.reviewValue[i],
-        weight: pagingProductRepository.weights[i]);
+      name: pagingProductRepository.names[i],
+    );
 
     index++;
     pagingProducts.add(p);

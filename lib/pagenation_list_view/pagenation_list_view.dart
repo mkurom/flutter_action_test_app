@@ -20,7 +20,10 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
   @override
   void initState() {
     super.initState();
+
+    // view_modelからデータを取得
     _products = List.from(populateData());
+    // ページカウント = データ数 / 1ページの表示数
     pageCount = (_products.length / rowsPerPage).ceilToDouble();
   }
 
@@ -71,11 +74,9 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: SafeArea(
-        bottom: true,
-        top: false,
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Fruits'),
+            title: Text('pagenation sample'),
           ),
           body: LayoutBuilder(builder: (context, constraint) {
             return Column(
@@ -86,26 +87,22 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
                 ),
                 Container(
                   height: dataPagerHeight,
-                  child: Container(
-                    // child: SfDataPagerTheme(
-                    //     data: SfDataPagerThemeData(
-                    //       itemBorderRadius: BorderRadius.circular(5),
-                    //     ),
-                    child: SfDataPager(
-                      pageCount: pageCount,
-                      onPageNavigationStart: (pageIndex) {
-                        setState(() {
-                          showLoadingIndicator = true;
-                        });
-                      },
-                      onPageNavigationEnd: (pageIndex) {
-                        setState(() {
-                          showLoadingIndicator = false;
-                        });
-                      },
-                      delegate: CustomSliverChildBuilderDelegate(indexBuilder)
-                        ..addListener(rebuildList),
-                    ),
+                  child: SfDataPager(
+                    pageCount: pageCount, // ページ数
+                    onPageNavigationStart: (pageIndex) {
+                      print(pageIndex);
+                      setState(() {
+                        showLoadingIndicator = true;
+                      });
+                    },
+                    onPageNavigationEnd: (pageIndex) {
+                      print(pageIndex);
+                      setState(() {
+                        showLoadingIndicator = false;
+                      });
+                    },
+                    delegate: CustomSliverChildBuilderDelegate(indexBuilder)
+                      ..addListener(rebuildList),
                   ),
                 )
               ],
@@ -127,15 +124,6 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
               height: 100,
               child: Row(
                 children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)),
-                      //child: Image.asset(data.image!, width: 100, height: 100),
-                    ),
-                  ),
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 10, 5, 5),
                     child: Column(
@@ -149,12 +137,12 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
                                   color: Colors.black87,
                                   fontSize: 15)),
                         ),
-                        Container(
-                          width: constraint.maxWidth - 130,
-                          child: Text(data.weight!,
-                              style: TextStyle(
-                                  color: Colors.black87, fontSize: 10)),
-                        ),
+                        // Container(
+                        //   width: constraint.maxWidth - 130,
+                        //   child: Text(data.weight!,
+                        //       style: TextStyle(
+                        //           color: Colors.black87, fontSize: 10)),
+                        // ),
                         Container(
                           width: constraint.maxWidth - 130,
                           child: Row(
@@ -164,10 +152,11 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
                                 padding: EdgeInsets.all(3),
                                 child: Row(
                                   children: [
-                                    Text('${data.reviewValue}',
-                                        textAlign: TextAlign.end,
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 13)),
+                                    // Text('${data.reviewValue}',
+                                    //     textAlign: TextAlign.end,
+                                    //     style: TextStyle(
+                                    //         color: Colors.white, fontSize: 13),
+                                    // ),
                                     SizedBox(width: 2),
                                     Icon(
                                       Icons.star,
@@ -178,10 +167,12 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
                                 ),
                               ),
                               SizedBox(width: 5),
-                              Text('${data.ratings}',
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      color: Colors.black87, fontSize: 11))
+                              // Text(
+                              //   '${data.ratings}',
+                              //   textAlign: TextAlign.end,
+                              //   style: TextStyle(
+                              //       color: Colors.black87, fontSize: 11),
+                              // ),
                             ],
                           ),
                         ),
@@ -189,16 +180,18 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
                           width: constraint.maxWidth - 130,
                           child: Row(
                             children: [
-                              Container(
-                                child: Text('\$${data.price}',
-                                    style: TextStyle(
-                                        color: Colors.green.shade800,
-                                        fontSize: 13)),
-                              ),
+                              // Container(
+                              //   child: Text('\$${data.price}',
+                              //       style: TextStyle(
+                              //           color: Colors.green.shade800,
+                              //           fontSize: 13)),
+                              // ),
                               SizedBox(width: 8),
-                              Text('${data.offer}',
-                                  style: TextStyle(
-                                      color: Colors.black87, fontSize: 10))
+                              // Text(
+                              //   '${data.offer}',
+                              //   style: TextStyle(
+                              //       color: Colors.black87, fontSize: 10),
+                              // ),
                             ],
                           ),
                         ),
