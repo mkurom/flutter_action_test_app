@@ -24,7 +24,7 @@ class RowAndColumnPage extends StatelessWidget {
                 // Rowを２つ重ねて、アイコンとテキスト、日付の組み合わせにする
                 // Lineのようなタイムラインを作成する時に使用する
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
