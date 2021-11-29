@@ -78,37 +78,96 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
           appBar: AppBar(
             title: Text('pagenation sample'),
           ),
-          body: LayoutBuilder(builder: (context, constraint) {
-            return Column(
-              children: [
-                Container(
-                  height: constraint.maxHeight - dataPagerHeight,
-                  child: loadListView(constraint),
-                ),
-                Container(
-                  height: dataPagerHeight,
-                  child: SfDataPager(
-                    pageCount: pageCount, // ページ数
-                    onPageNavigationStart: (pageIndex) {
-                      print(pageIndex);
-                      setState(() {
-                        showLoadingIndicator = true;
-                      });
-                    },
-                    onPageNavigationEnd: (pageIndex) {
-                      print(pageIndex);
-                      setState(() {
-                        showLoadingIndicator = false;
-                      });
-                    },
-                    delegate: CustomSliverChildBuilderDelegate(indexBuilder)
-                      ..addListener(rebuildList),
-                  ),
-                )
-              ],
-            );
-          }),
+          // body: _layout(),
+          body: _pagenationBottombar(),
         ),
+      ),
+    );
+  }
+
+  Widget _layout() {
+    return LayoutBuilder(
+      builder: (context, constraint) {
+        return Column(
+          children: [
+            Container(
+              height: constraint.maxHeight - dataPagerHeight,
+              child: loadListView(constraint),
+            ),
+            Container(
+              height: dataPagerHeight,
+              child: SfDataPager(
+                pageCount: pageCount, // ページ数
+                onPageNavigationStart: (pageIndex) {
+                  print(pageIndex);
+                  setState(() {
+                    showLoadingIndicator = true;
+                  });
+                },
+                onPageNavigationEnd: (pageIndex) {
+                  print(pageIndex);
+                  setState(() {
+                    showLoadingIndicator = false;
+                  });
+                },
+                delegate: CustomSliverChildBuilderDelegate(indexBuilder)
+                  ..addListener(rebuildList),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _pagenationBottombar() {
+    final listCount = 100;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // ページ数:4 + 三角アイコン:2 + 3点:1 + スペース分:3 = 10分割
+    final pagenationContainerSize = screenWidth / 10;
+
+    final pageCount = ((listCount / 10) == 0 ? 1 : (listCount / 10)).toInt();
+
+    return Container(
+      width: screenWidth,
+      height: pagenationContainerSize,
+      alignment: Alignment.center,
+      child: ListView.builder(
+        shrinkWrap: true,
+        // padding: const EdgeInsets.symmetric(horizontal: 100),
+        scrollDirection: Axis.horizontal,
+        itemCount: pageCount,
+        itemBuilder: (context, index) {
+          if (index > 2 && index < pageCount - 2) {
+            return Container();
+          }
+          if (index == pageCount - 1) {
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+              width: pagenationContainerSize,
+              height: pagenationContainerSize,
+              color: Colors.blue,
+            );
+          }
+
+          if (pageCount > 3 && index == pageCount - 2) {
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+              width: pagenationContainerSize,
+              height: pagenationContainerSize,
+              child: Icon(Icons.keyboard_control_outlined),
+            );
+          }
+
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+            width: pagenationContainerSize,
+            height: pagenationContainerSize,
+            color: Colors.black,
+          );
+        },
       ),
     );
   }
