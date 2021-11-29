@@ -12,7 +12,7 @@ class RowAndColumnPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.grey,
+      backgroundColor: Colors.grey,
       appBar: _appbar(context),
       body: GestureDetector(
         onTap: () {
@@ -140,30 +140,30 @@ class RowAndColumnPage extends StatelessWidget {
   Widget _inputBar(BuildContext context) {
     //
     return Container(
-      // maxLines: 10を設定している状態でheightを設定すると、カーソルが見えない
-      // maxLines: 1の時は問題ない（改行しないため）
-      height: 60,
       padding: const EdgeInsets.symmetric(
         horizontal: 18,
         vertical: 14,
       ),
       color: Colors.blue,
-      // constraints: BoxConstraints(
-      //   minHeight: 32,
-      // ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(
+          ConstrainedBox(
+            constraints: BoxConstraints(
+                maxHeight: 200, minHeight: 32, minWidth: 300, maxWidth: 300),
             child: TextField(
               controller: _textEditingController,
-              cursorColor: Colors.white,
+              cursorColor: Colors.amber,
               style: const TextStyle(
-                color: Colors.white,
+                color: Colors.amber,
               ),
               decoration: const InputDecoration(
-                // fillColor: Colors.white,
-                // filled: true,
+                fillColor: Colors.white,
+                filled: true,
+                // isDenseをtrueにすることで、テキストフィールド領域を最小にする事ができる
+                isDense: true,
+                contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 10),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(4),
@@ -176,14 +176,14 @@ class RowAndColumnPage extends StatelessWidget {
                     bottomLeft: Radius.circular(4),
                   ),
                 ),
-                // hintText: 'メッセージを入力',
+                hintText: 'メッセージを入力',
               ),
-              // Containerのheight: 60に設定している状態で、
-              // コメントアウトを外すと、カーソルが見えない
-              // maxLines: 10,
+              maxLines: 10,
+              minLines: 1,
             ),
           ),
           SizedBox(
+            height: 32,
             child: TextButton(
               onPressed: () {
                 print(_textEditingController.text);
