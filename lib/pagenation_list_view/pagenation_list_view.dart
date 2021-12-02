@@ -16,7 +16,6 @@ int rowsPerPage = 10;
 class _DataPagerWithListView extends State<DataPagerWithListView> {
   static const double dataPagerHeight = 70.0;
   bool showLoadingIndicator = false;
-  double pageCount = 0;
   @override
   void initState() {
     super.initState();
@@ -24,7 +23,6 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
     // view_modelからデータを取得
     _products = List.from(populateData());
     // ページカウント = データ数 / 1ページの表示数
-    pageCount = (_products.length / rowsPerPage).ceilToDouble();
   }
 
   void rebuildList() {
@@ -68,6 +66,7 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
 
   @override
   Widget build(BuildContext context) {
+    print('print');
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -79,96 +78,204 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
             title: Text('pagenation sample'),
           ),
           // body: _layout(),
-          body: _pagenationBottombar(),
+          body: Column(
+            children: [
+              _pagenationBottombar(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _layout() {
-    return LayoutBuilder(
-      builder: (context, constraint) {
-        return Column(
-          children: [
-            Container(
-              height: constraint.maxHeight - dataPagerHeight,
-              child: loadListView(constraint),
-            ),
-            Container(
-              height: dataPagerHeight,
-              child: SfDataPager(
-                pageCount: pageCount, // ページ数
-                onPageNavigationStart: (pageIndex) {
-                  print(pageIndex);
-                  setState(() {
-                    showLoadingIndicator = true;
-                  });
-                },
-                onPageNavigationEnd: (pageIndex) {
-                  print(pageIndex);
-                  setState(() {
-                    showLoadingIndicator = false;
-                  });
-                },
-                delegate: CustomSliverChildBuilderDelegate(indexBuilder)
-                  ..addListener(rebuildList),
-              ),
-            )
-          ],
-        );
-      },
-    );
-  }
+  // 選択しているページ
+  int _selectedIndex = 0;
+  // アイテム数 / 10 (1ページの表示数)
+  int _pageCount = 0;
+  // 検索して見つかったアイテム数
+  int _itemCount = 0;
+
+// List<int> _list = List.generate(5, (index) => index * 2);
 
   Widget _pagenationBottombar() {
-    final listCount = 100;
-
     final screenWidth = MediaQuery.of(context).size.width;
+    // サンプル数
+    _itemCount = 40;
+    _pageCount = ((_itemCount / 10) == 0 ? 1 : (_itemCount / 10)).ceil();
 
-    // ページ数:4 + 三角アイコン:2 + 3点:1 + スペース分:3 = 10分割
-    final pagenationContainerSize = screenWidth / 10;
+    return Column(
+      children: [
+        Text('ページ数：$_pageCount'),
+        Text('アイテム数：$_itemCount'),
+        Text('選択：${_selectedIndex + 1}'),
+        Container(
+          width: screenWidth,
+          height: 45,
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          // alignment: Alignment.center,
+          child: CustomScrollView(
+            scrollDirection: Axis.horizontal,
+            slivers: [
+              // 先頭の矢印
+              if (_selectedIndex != 0 && _pageCount > 1)
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return Container(
+                        height: 45,
+                        width: 45,
+                        color: Colors.blue,
+                        margin: const EdgeInsets.all(2),
+                        child: InkWell(
+                          onTap: () {
+                            print(index);
 
-    final pageCount = ((listCount / 10) == 0 ? 1 : (listCount / 10)).toInt();
+                            setState(() {
+                              _selectedIndex--;
+                            });
+                          },
+                          child: Icon(Icons.arrow_back_ios_new_outlined),
+                        ),
+                      );
+                    },
+                    childCount: 1,
+                  ),
+                ),
+              // ボタン
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    if (_pageCount >= 3) {
+                      // 先頭の3点
+                      if (_selectedIndex >= 3 && index == 1) {
+                        return Container(
+                          height: 45,
+                          width: 20,
+                          margin: const EdgeInsets.all(2),
+                          child: Icon(Icons.keyboard_control_outlined),
+                        );
+                      }
 
-    return Container(
-      width: screenWidth,
-      height: pagenationContainerSize,
-      alignment: Alignment.center,
-      child: ListView.builder(
-        shrinkWrap: true,
-        // padding: const EdgeInsets.symmetric(horizontal: 100),
-        scrollDirection: Axis.horizontal,
-        itemCount: pageCount,
-        itemBuilder: (context, index) {
-          if (index > 2 && index < pageCount - 2) {
-            return Container();
-          }
-          if (index == pageCount - 1) {
-            return Container(
-              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-              width: pagenationContainerSize,
-              height: pagenationContainerSize,
-              color: Colors.blue,
-            );
-          }
+                      // 表示しないページ
+                      if (index < _selectedIndex - 1 &&
+                          index != 0 &&
+                          _selectedIndex > 3 &&
+                          _selectedIndex != _pageCount - 1) {
+                        return Container();
+                      }
+                    }
 
-          if (pageCount > 3 && index == pageCount - 2) {
-            return Container(
-              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-              width: pagenationContainerSize,
-              height: pagenationContainerSize,
-              child: Icon(Icons.keyboard_control_outlined),
-            );
-          }
+                    // // 後段の3点
+                    // if (_pageCount >= 3 &&
+                    //     index > 3 &&
+                    //     _selectedIndex != index + 1 &&
+                    //     _selectedIndex != index &&
+                    //     _selectedIndex != index - 1 &&
+                    //     index != _pageCount - 1) {
+                    //   return Container(
+                    //     height: 45,
+                    //     width: 20,
+                    //     margin: const EdgeInsets.all(2),
+                    //     child: Icon(Icons.keyboard_control_outlined),
+                    //   );
+                    // }
 
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-            width: pagenationContainerSize,
-            height: pagenationContainerSize,
-            color: Colors.black,
-          );
-        },
-      ),
+                    // ボタン
+                    return Container(
+                      height: 45,
+                      width: 45,
+                      color: (index == _selectedIndex)
+                          ? Colors.green
+                          : Colors.amber,
+                      margin: const EdgeInsets.all(2),
+                      child: InkWell(
+                        onTap: () {
+                          print(index);
+
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                        },
+                        child: Center(
+                          child: Text(
+                            (index + 1).toString(),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  childCount: _pageCount,
+                ),
+              ),
+
+              // 後段の矢印
+              if (_selectedIndex != _pageCount - 1)
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return Container(
+                        height: 45,
+                        width: 45,
+                        color: Colors.blue,
+                        margin: const EdgeInsets.all(2),
+                        child: InkWell(
+                          onTap: () {
+                            print(index);
+
+                            setState(() {
+                              _selectedIndex++;
+                            });
+                          },
+                          child: Icon(Icons.arrow_forward_ios_outlined),
+                        ),
+                      );
+                    },
+                    childCount: 1,
+                  ),
+                ),
+            ],
+          ),
+
+          // child: ListView.builder(
+          //   shrinkWrap: true,
+          //   // padding: const EdgeInsets.symmetric(horizontal: 100),
+          //   scrollDirection: Axis.horizontal,
+          //   itemCount: pageCount,
+          //   itemBuilder: (context, index) {
+
+          //     //item数が11以上、かつselectPageIndexが1以外の時
+
+          //     if (index > 2 && index < pageCount - 2) {
+          //       return Container();
+          //     }
+          //     if (index == pageCount - 1) {
+          //       return Container(
+          //         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+          //         width: pagenationContainerSize,
+          //         height: pagenationContainerSize,
+          //         color: Colors.blue,
+          //       );
+          //     }
+
+          //     if (pageCount > 3 && index == pageCount - 2) {
+          //       return Container(
+          //         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+          //         width: pagenationContainerSize,
+          //         height: pagenationContainerSize,
+          //         child: Icon(Icons.keyboard_control_outlined),
+          //       );
+          //     }
+
+          //     return Container(
+          //       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+          //       width: pagenationContainerSize,
+          //       height: pagenationContainerSize,
+          //       color: Colors.black,
+          //     );
+          //   },
+          // ),
+        ),
+      ],
     );
   }
 
