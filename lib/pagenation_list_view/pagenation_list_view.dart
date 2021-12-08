@@ -14,7 +14,7 @@ List<PagingProduct> _products = [];
 int rowsPerPage = 10;
 
 class _DataPagerWithListView extends State<DataPagerWithListView> {
-  static const double dataPagerHeight = 70.0;
+  // static const dataPagerHeight = 70.0;
   bool showLoadingIndicator = false;
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
 
   @override
   Widget build(BuildContext context) {
-    print('print');
+    //print('print');
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -91,189 +91,155 @@ class _DataPagerWithListView extends State<DataPagerWithListView> {
   // 選択しているページ
   int _selectedIndex = 0;
   // アイテム数 / 10 (1ページの表示数)
-  int _pageCount = 0;
+  int _maxPage = 0;
   // 検索して見つかったアイテム数
   int _itemCount = 0;
+  // ボタンサイズ
+  double _buttonSize = 26;
 
-// List<int> _list = List.generate(5, (index) => index * 2);
+  Widget _pagenationButton(Color color, Function function, Widget widget) {
+    return Container(
+      height: _buttonSize,
+      width: _buttonSize,
+      color: color,
+      margin: const EdgeInsets.all(2),
+      child: InkWell(
+        onTap: () {
+          setState(
+            () {
+              function();
+            },
+          );
+        },
+        child: Center(child: widget),
+      ),
+    );
+  }
 
   Widget _pagenationBottombar() {
     final screenWidth = MediaQuery.of(context).size.width;
     // サンプル数
-    _itemCount = 40;
-    _pageCount = ((_itemCount / 10) == 0 ? 1 : (_itemCount / 10)).ceil();
+    _itemCount = 100;
+    // ページの最大数
+    _maxPage = ((_itemCount / 10) == 0 ? 1 : (_itemCount / 10)).ceil();
+
+    //現在のページから前後1ページを表示する
+    final beforecurrentPageCount = 1;
+    final startPageToEndPageCount = beforecurrentPageCount * 2 + 1;
+
+    final startpage =
+        1 < _selectedIndex ? _selectedIndex - beforecurrentPageCount : 0;
+    final endpage = startpage + startPageToEndPageCount < _maxPage
+        ? startpage + startPageToEndPageCount
+        : _maxPage;
+
+    List<Widget> _widget = [];
+
+    // 先頭の矢印
+    if (_selectedIndex != 0 && _maxPage > 1) {
+      _widget.add(
+        _pagenationButton(
+          Colors.blue,
+          () {
+            _selectedIndex--;
+          },
+          Icon(Icons.arrow_back_ios_new_outlined),
+        ),
+      );
+    }
+
+    // 1と「・・・」
+    if (_selectedIndex > 0) {
+      if (startpage > 0) {
+        _widget.add(
+          _pagenationButton(
+            Colors.amber,
+            () {
+              _selectedIndex = 0;
+            },
+            Text(
+              1.toString(),
+            ),
+          ),
+        );
+      }
+      if (_selectedIndex > 2) {
+        _widget.add(
+          _pagenationButton(
+            Colors.white,
+            () {},
+            Icon(Icons.keyboard_control_outlined),
+          ),
+        );
+      }
+    }
+
+    for (var i = startpage; i < endpage; i++) {
+      _widget.add(
+        _pagenationButton(
+          (i == _selectedIndex) ? Colors.green : Colors.amber,
+          () {
+            _selectedIndex = i;
+          },
+          Text(
+            (i + 1).toString(),
+          ),
+        ),
+      );
+    }
+
+    // _maxPageと「・・・」
+    if (_maxPage - 1 > _selectedIndex) {
+      if (_maxPage - 4 > _selectedIndex) {
+        _widget.add(
+          _pagenationButton(
+            Colors.white,
+            () {},
+            Icon(Icons.keyboard_control_outlined),
+          ),
+        );
+      }
+
+      if (_maxPage > endpage) {
+        _widget.add(
+          _pagenationButton(
+            Colors.amber,
+            () {
+              _selectedIndex = _maxPage - 1;
+            },
+            Text(
+              (_maxPage).toString(),
+            ),
+          ),
+        );
+      }
+    }
+
+    // 末尾の矢印
+    if (_selectedIndex != _maxPage - 1 && _maxPage > 1) {
+      _widget.add(
+        _pagenationButton(
+          Colors.blue,
+          () {
+            _selectedIndex++;
+          },
+          Icon(Icons.arrow_forward_ios_outlined),
+        ),
+      );
+    }
 
     return Column(
       children: [
-        Text('ページ数：$_pageCount'),
+        Text('ページ数：$_maxPage'),
         Text('アイテム数：$_itemCount'),
-        Text('選択：${_selectedIndex + 1}'),
+        Text('選択：${_selectedIndex}'),
+        Text('$startpage - $endpage'),
         Container(
-          width: screenWidth,
-          height: 45,
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          // alignment: Alignment.center,
-          child: CustomScrollView(
-            scrollDirection: Axis.horizontal,
-            slivers: [
-              // 先頭の矢印
-              if (_selectedIndex != 0 && _pageCount > 1)
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return Container(
-                        height: 45,
-                        width: 45,
-                        color: Colors.blue,
-                        margin: const EdgeInsets.all(2),
-                        child: InkWell(
-                          onTap: () {
-                            print(index);
-
-                            setState(() {
-                              _selectedIndex--;
-                            });
-                          },
-                          child: Icon(Icons.arrow_back_ios_new_outlined),
-                        ),
-                      );
-                    },
-                    childCount: 1,
-                  ),
-                ),
-              // ボタン
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    if (_pageCount >= 3) {
-                      // 先頭の3点
-                      if (_selectedIndex >= 3 && index == 1) {
-                        return Container(
-                          height: 45,
-                          width: 20,
-                          margin: const EdgeInsets.all(2),
-                          child: Icon(Icons.keyboard_control_outlined),
-                        );
-                      }
-
-                      // 表示しないページ
-                      if (index < _selectedIndex - 1 &&
-                          index != 0 &&
-                          _selectedIndex > 3 &&
-                          _selectedIndex != _pageCount - 1) {
-                        return Container();
-                      }
-                    }
-
-                    // // 後段の3点
-                    // if (_pageCount >= 3 &&
-                    //     index > 3 &&
-                    //     _selectedIndex != index + 1 &&
-                    //     _selectedIndex != index &&
-                    //     _selectedIndex != index - 1 &&
-                    //     index != _pageCount - 1) {
-                    //   return Container(
-                    //     height: 45,
-                    //     width: 20,
-                    //     margin: const EdgeInsets.all(2),
-                    //     child: Icon(Icons.keyboard_control_outlined),
-                    //   );
-                    // }
-
-                    // ボタン
-                    return Container(
-                      height: 45,
-                      width: 45,
-                      color: (index == _selectedIndex)
-                          ? Colors.green
-                          : Colors.amber,
-                      margin: const EdgeInsets.all(2),
-                      child: InkWell(
-                        onTap: () {
-                          print(index);
-
-                          setState(() {
-                            _selectedIndex = index;
-                          });
-                        },
-                        child: Center(
-                          child: Text(
-                            (index + 1).toString(),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  childCount: _pageCount,
-                ),
-              ),
-
-              // 後段の矢印
-              if (_selectedIndex != _pageCount - 1)
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return Container(
-                        height: 45,
-                        width: 45,
-                        color: Colors.blue,
-                        margin: const EdgeInsets.all(2),
-                        child: InkWell(
-                          onTap: () {
-                            print(index);
-
-                            setState(() {
-                              _selectedIndex++;
-                            });
-                          },
-                          child: Icon(Icons.arrow_forward_ios_outlined),
-                        ),
-                      );
-                    },
-                    childCount: 1,
-                  ),
-                ),
-            ],
-          ),
-
-          // child: ListView.builder(
-          //   shrinkWrap: true,
-          //   // padding: const EdgeInsets.symmetric(horizontal: 100),
-          //   scrollDirection: Axis.horizontal,
-          //   itemCount: pageCount,
-          //   itemBuilder: (context, index) {
-
-          //     //item数が11以上、かつselectPageIndexが1以外の時
-
-          //     if (index > 2 && index < pageCount - 2) {
-          //       return Container();
-          //     }
-          //     if (index == pageCount - 1) {
-          //       return Container(
-          //         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-          //         width: pagenationContainerSize,
-          //         height: pagenationContainerSize,
-          //         color: Colors.blue,
-          //       );
-          //     }
-
-          //     if (pageCount > 3 && index == pageCount - 2) {
-          //       return Container(
-          //         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-          //         width: pagenationContainerSize,
-          //         height: pagenationContainerSize,
-          //         child: Icon(Icons.keyboard_control_outlined),
-          //       );
-          //     }
-
-          //     return Container(
-          //       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-          //       width: pagenationContainerSize,
-          //       height: pagenationContainerSize,
-          //       color: Colors.black,
-          //     );
-          //   },
-          // ),
+          height: 200,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: _widget,
         ),
       ],
     );
