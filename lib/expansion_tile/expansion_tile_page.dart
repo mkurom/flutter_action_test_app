@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_action_test_app/expansion_tile/expansion_tile_test.dart';
 
 class ExpansionTilePage extends StatefulWidget {
   const ExpansionTilePage({Key? key}) : super(key: key);
