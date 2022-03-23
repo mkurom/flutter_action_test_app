@@ -43,5 +43,18 @@
 	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera permission is required for barcode scanning.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+    <string>カメラ機能を利用する許可が必要です。</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>写真にアクセスする許可が必要です。</string>
+    <key>UISupportsDocumentBrowser</key>
+    <true/>
+    <key>LSSupportsOpeningDocumentsInPlace</key>
+    <true/>
 </dict>
 </plist>
